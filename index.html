@@ -11,11 +11,11 @@
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="assets/fonts/fonts.css" />
-    <link rel="stylesheet" href="style.css?v=spoon3" />
+    <link rel="stylesheet" href="style.css?v=spoon4" />
     <script type="importmap">
       { "imports": { "three": "./assets/vendor/three.module.js" } }
     </script>
-    <script type="module" src="app.js?v=spoon3"></script>
+    <script type="module" src="app.js?v=spoon4"></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -49,24 +49,16 @@
           class="identity-sequence"
           aria-label="Spoon transport, from human to robot"
         >
-          <div
-            class="sequence-scroll"
-            tabindex="0"
-            role="region"
-            aria-label="Spoon sequence; scroll horizontally on a small screen"
-          >
+          <div class="sequence-scroll">
             <img
               id="spoon-sequence"
-              src="assets/figures/spoon-sequence.webp?v=spoon3"
-              width="3200"
-              height="560"
+              src="assets/figures/spoon-sequence.webp?v=spoon4"
+              width="2400"
+              height="600"
               fetchpriority="high"
-              alt="Nine successive poses spanning the complete spoon-transport sequence, from the human hand on the left through increasingly visible robot poses to the Allegro hand on the right."
+              alt="Five successive spoon-transport poses: human hands in the first two frames, a faint human and Allegro overlap in frame three, and Allegro alone in the last two."
             />
           </div>
-          <span class="sequence-mobile-hint"
-            >Swipe to follow the sequence →</span
-          >
           <figcaption>
             <span class="rose">Human</span
             ><span class="sequence-axis" aria-hidden="true"></span
@@ -360,7 +352,7 @@
                   playsinline
                   muted
                   preload="metadata"
-                  src="assets/media/real-cut.mp4?v=spoon3"
+                  src="assets/media/real-cut.mp4?v=spoon4"
                   poster="assets/media/real-cut.webp"
                   aria-label="Real-robot cutting experiment"
                 ></video

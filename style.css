@@ -2134,7 +2134,7 @@ h1 .wordmark {
 
 /* Static chronological identity. The figure has no animation or WebGL runtime. */
 .identity-sequence {
-  width: min(1180px, 100%);
+  width: min(760px, 100%);
   margin: 32px auto 23px;
 }
 .sequence-scroll {
@@ -2147,7 +2147,7 @@ h1 .wordmark {
   display: block;
   width: 100%;
   height: auto;
-  min-width: 720px;
+  min-width: 0;
 }
 .identity-sequence figcaption {
   max-width: 760px;
@@ -2178,7 +2178,7 @@ h1 .wordmark {
     margin: 24px auto 24px;
   }
   .identity-sequence img {
-    min-width: 780px;
+    min-width: 0;
   }
   .identity-sequence figcaption {
     font-size: 8px;
@@ -2196,17 +2196,4 @@ h1 .wordmark {
 
 .paper-subtitle > .green {
   margin-left: 0.16em;
-}
-
-.sequence-mobile-hint {
-  display: none;
-}
-@media (max-width: 760px) {
-  .sequence-mobile-hint {
-    display: block;
-    margin-top: 5px;
-    color: var(--muted);
-    font-size: 9px;
-    letter-spacing: 0.3px;
-  }
 }
