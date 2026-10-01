@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DexOAK · Credits</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="style.css?v=spoon3" />
+  </head>
+  <body>
+    <main class="credits-page">
+      <a href="./">← Back to DexOAK</a>
+      <h1>Design & asset credits</h1>
+      <p>
+        This site uses an original implementation and layout.
+        <a href="https://4dcodebench.com/">4D CodeBench</a> inspired the
+        restrained chaptered teaser, generous spacing and section-progress
+        navigation.
+        <a href="https://nvidia-isaac.github.io/video_to_data/chord/">CHORD</a>,
+        <a href="https://omniretarget.github.io/">OmniRetarget</a> and
+        <a href="https://jc-bao.github.io/spider-project/">SPIDER</a> informed
+        the research storytelling and interactive comparisons. No external
+        website template or source code was copied.
+      </p>
+      <p>
+        Research content comes from the supplied DexOAK manuscript and
+        presentation. Real-robot footage is extracted from the original
+        presentation and encoded at up to 1920 pixels wide, preserving its frame
+        rate. The static header samples nine poses spanning the complete
+        spoon-transport sequence, with human-to-robot opacity changing across
+        the still image. Simulator views render actual meshes, forward
+        kinematics, reference trajectories and recorded policy states in the
+        browser.
+      </p>
+      <p>
+        The cutting optimizer seed and fine-tuned trajectories are archived
+        research outputs. The graph animation rebuilds Delaunay connectivity
+        with a reduced set of surface anchors for clarity. The separately
+        labeled single-frame optimization is a fresh SLSQP re-solve of the graph
+        objective with joint and wrist bounds; it is not the original complete
+        seed-generation optimization trace. Visualization interpolates sampled
+        recorded frames.
+      </p>
+      <p>
+        OakInk Allegro views retain the original renderer’s fixed alignment
+        between simulation and demonstration coordinates. Inspire uncapping uses
+        the verified DexOAK rollout and original figure time mapping. The
+        original renderer’s ManipTrans Inspire baseline is not labeled or shown
+        as DexOAK. ARCTIC views retain the articulated-object kinematics and
+        verified residual-policy state dumps.
+      </p>
+      <p>
+        <a href="https://threejs.org/">Three.js and OrbitControls</a> use the
+        MIT license, included with the vendor files. DM Sans and Manrope use the
+        SIL Open Font License, included with the fonts. Dataset and robot
+        geometry assets retain their original licenses.
+      </p>
+      <p>
+        Code, public video, Hugging Face and arXiv links remain pending. The
+        local manuscript is the supplied anonymous review version. Citation
+        metadata is provisional until the public preprint is available.
+      </p>
+    </main>
+  </body>
+</html>

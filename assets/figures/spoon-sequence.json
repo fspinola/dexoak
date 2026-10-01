@@ -1,0 +1,40 @@
+{
+  "scene": "spoon",
+  "source": "d7c33@1",
+  "stage": "allegro-ft",
+  "duration": 5.066666666666666,
+  "sampleIndices": [
+    0,
+    23,
+    45,
+    68,
+    90,
+    113,
+    135,
+    158,
+    180
+  ],
+  "sourceFrames": [
+    1984,
+    2022,
+    2060,
+    2098,
+    2136,
+    2174,
+    2212,
+    2250,
+    2288
+  ],
+  "blendWeights": [
+    0,
+    0.04480898491083675,
+    0.15625,
+    0.320318244170096,
+    0.5,
+    0.6874941700960219,
+    0.84375,
+    0.9588367626886146,
+    1
+  ],
+  "note": "Static chronological strip. Ground-truth human and object meshes, recorded Allegro FT poses. Snapshots translated along a display time axis; no temporal animation."
+}

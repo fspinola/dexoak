@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DexOAK · Object-Aware Kinematic Retargeting</title>
+    <meta
+      name="description"
+      content="Teach the interaction. Transfer the motion. DexOAK learns object-aware human-to-robot retargeting, with interactive 3D results across dexterous hands."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="style.css?v=spoon3" />
+    <script type="importmap">
+      { "imports": { "three": "./assets/vendor/three.module.js" } }
+    </script>
+    <script type="module" src="app.js?v=spoon3"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <a class="wordmark small" href="#top" aria-label="DexOAK home">DexOAK</a>
+      <nav aria-label="Main navigation">
+        <a href="#teaser">Story</a><a href="#explore">Explore</a
+        ><a href="#real-world">Real world</a><a href="#method">Method</a
+        ><a href="#results">Results</a>
+      </nav>
+      <a
+        class="top-paper"
+        href="assets/paper.pdf"
+        target="_blank"
+        rel="noopener"
+        >Read the paper <span aria-hidden="true">↗</span></a
+      >
+    </header>
+    <nav class="page-rail" aria-label="Section progress">
+      <a href="#top" class="active"><i></i><span>Overview</span></a
+      ><a href="#teaser"><i></i><span>The story</span></a
+      ><a href="#explore"><i></i><span>Explore</span></a
+      ><a href="#real-world"><i></i><span>Real world</span></a
+      ><a href="#method"><i></i><span>Method</span></a
+      ><a href="#results"><i></i><span>Results</span></a
+      ><a href="#cite"><i></i><span>Citation</span></a>
+    </nav>
+    <main id="main">
+      <section class="paper-header" id="top" aria-labelledby="paper-title">
+        <figure
+          class="identity-sequence"
+          aria-label="Spoon transport, from human to robot"
+        >
+          <div
+            class="sequence-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Spoon sequence; scroll horizontally on a small screen"
+          >
+            <img
+              id="spoon-sequence"
+              src="assets/figures/spoon-sequence.webp?v=spoon3"
+              width="3200"
+              height="560"
+              fetchpriority="high"
+              alt="Nine successive poses spanning the complete spoon-transport sequence, from the human hand on the left through increasingly visible robot poses to the Allegro hand on the right."
+            />
+          </div>
+          <span class="sequence-mobile-hint"
+            >Swipe to follow the sequence →</span
+          >
+          <figcaption>
+            <span class="rose">Human</span
+            ><span class="sequence-axis" aria-hidden="true"></span
+            ><span class="sequence-caption"
+              >Spoon transport · start → finish</span
+            ><span class="sequence-axis" aria-hidden="true"></span
+            ><span class="green">Robot</span>
+          </figcaption>
+        </figure>
+        <h1 id="paper-title">
+          <span class="wordmark">DexOAK</span
+          ><span class="paper-subtitle"
+            ><span class="rose">Object-Aware</span>
+            <span class="green">Kinematic Retargeting</span></span
+          >
+        </h1>
+        <div id="authors" class="authors"></div>
+        <div class="resource-links">
+          <a
+            class="button primary"
+            href="assets/paper.pdf"
+            target="_blank"
+            rel="noopener"
+            ><svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 2h7l4 4v12H5z M12 2v5h4 M8 11h5 M8 14h5" /></svg
+            >Paper</a
+          ><a class="button" href="#teaser"
+            ><svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m7 4 9 6-9 6z" /></svg
+            >Teaser <small>live 3D</small></a
+          ><a
+            class="button pending"
+            id="github-link"
+            aria-disabled="true"
+            title="Repository link will be added at release"
+            ><svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m7 6-4 4 4 4 M13 6l4 4-4 4 M11 4l-2 12" /></svg
+            >Code <small>soon</small></a
+          ><a
+            class="button pending"
+            id="huggingface-link"
+            aria-disabled="true"
+            title="Hugging Face link will be added at release"
+            ><svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m10 2 7 4v8l-7 4-7-4V6z M3 6l7 4 7-4 M10 10v8" /></svg
+            >Hugging Face <small>soon</small></a
+          ><a class="button" href="#cite"
+            >Citation <span aria-hidden="true">↘</span></a
+          >
+        </div>
+      </section>
+      <div class="opening container">
+        <h2>
+          <span class="rose">Teach the interaction.</span><br /><span
+            class="green"
+            >Transfer the motion.</span
+          >
+        </h2>
+        <p>
+          Different hands. The same intent. DexOAK turns human hand–object
+          motion into object-aware robot references, then refines them into
+          physical interactions.
+        </p>
+      </div>
+      <section
+        id="teaser"
+        class="teaser container"
+        aria-label="Interactive research teaser"
+      >
+        <div class="film-top">
+          <span class="eyebrow">One interaction. From human to robot.</span>
+          <div class="segmented" id="teaser-tasks" aria-label="Teaser task">
+            <button data-teaser-task="cut" class="active" aria-pressed="true">
+              Cut fruit</button
+            ><button data-teaser-task="uncap" aria-pressed="false">
+              Uncap lamp
+            </button>
+          </div>
+        </div>
+        <div class="film-transport">
+          <button class="icon-button" id="film-play" aria-label="Pause teaser">
+            Ⅱ
+          </button>
+          <div id="chapters" class="chapters"></div>
+          <span id="film-time" class="timecode">00 / 40 s</span>
+        </div>
+        <div class="film-stage">
+          <div class="film-copy" aria-live="polite">
+            <span id="film-kicker" class="eyebrow rose">01 / HUMAN MOTION</span>
+            <h2 id="film-title">
+              One intent.<br /><span class="green">Many hands.</span>
+            </h2>
+            <p id="film-description">
+              A human demonstrates a delicate, coordinated interaction. The
+              robot’s anatomy is different. The task stays the same.
+            </p>
+            <div id="film-detail" class="film-detail">
+              Bimanual cutting · OakInk-v2
+            </div>
+          </div>
+          <div id="hero-scene" class="film-visual scene">
+            <span class="loading">Loading the cutting sequence…</span>
+          </div>
+          <div class="scene-hint">
+            Drag to orbit <span>·</span> Scroll to zoom
+          </div>
+          <div id="solve-card" class="solve-card" hidden>
+            <div>
+              <span>Graph objective</span><strong id="solve-loss">—</strong>
+            </div>
+            <svg
+              id="solve-chart"
+              viewBox="0 0 240 66"
+              aria-label="Logged graph optimization objective"
+              role="img"
+            ></svg
+            ><small id="solve-step">Single-frame SLSQP re-solve</small>
+          </div>
+        </div>
+        <div class="film-legend">
+          <span><i class="line rose-line"></i>GT object</span
+          ><span><i class="line dashed rose-line"></i>GT hand</span
+          ><span><i class="line green-line"></i>RL object</span
+          ><span class="live-label"><i></i>Live 3D</span>
+        </div>
+
+        <div class="film-footnote">
+          <span id="teaser-provenance"
+            >Actual meshes & recorded motion · visual interpolation</span
+          ><a href="#explore"
+            >Take control of the motion <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+      <div class="paper-takeaways container">
+        <div>
+          <span class="takeaway-number rose">Object-aware</span>
+          <p>Preserve the interaction<br />across different hand geometries.</p>
+        </div>
+        <div>
+          <span class="takeaway-number green">108.9 <small>Hz</small></span>
+          <p>
+            Zero-shot retargeting on ARCTIC<br /><span class="muted"
+              >Table III · reference generation</span
+            >
+          </p>
+        </div>
+        <div>
+          <span class="takeaway-number gradient-text">Beyond simulation</span>
+          <p>Selected learned motions<br />replayed on real hardware.</p>
+        </div>
+      </div>
+      <section
+        id="explore"
+        class="section container"
+        aria-labelledby="explore-title"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">01 / Motion, from every angle</span>
+            <h2 id="explore-title">
+              Same task.<br /><span class="green">Different embodiments.</span>
+            </h2>
+          </div>
+          <p>
+            Orbit the scene. Follow the trajectories. Compare the kinematic
+            reference with the motion actually achieved after reinforcement
+            learning.
+          </p>
+        </div>
+        <div class="explorer-controls">
+          <div class="field">
+            <label for="scene-select">Interaction</label
+            ><select id="scene-select">
+              <option value="cut">Cut fruit · OakInk-v2</option>
+              <option value="uncap">Uncap alcohol lamp · OakInk-v2</option>
+              <option value="place">Place inside · OakInk-v2</option>
+              <option value="spoon">Rearrange spoon · OakInk-v2</option>
+              <option value="shake">Shake bottle · OakInk-v2</option>
+              <option value="box">Open box · ARCTIC</option>
+              <option value="mixer">Use mixer · ARCTIC</option>
+              <option value="ketchup">Squeeze ketchup · ARCTIC</option>
+            </select>
+          </div>
+          <div class="field">
+            <span>Embodiment</span>
+            <div class="segmented" id="hand-tabs">
+              <button data-hand="allegro" aria-pressed="true" class="active">
+                Allegro</button
+              ><button data-hand="inspire" aria-pressed="false">Inspire</button>
+            </div>
+          </div>
+          <button id="reset-view" class="text-button">Reset view ↺</button>
+        </div>
+        <div class="comparison">
+          <article class="viewer-panel">
+            <div class="panel-heading">
+              <span class="eyebrow rose">01 / Reference</span
+              ><label class="sr-only" for="reference-stage"
+                >Reference stage</label
+              ><select id="reference-stage">
+                <option value="ft">Object-aware fine-tuning</option>
+                <option value="graph">IG optimizer seed</option>
+              </select>
+            </div>
+            <div id="reference-scene" class="compare-scene scene">
+              <span class="loading">Preparing live geometry…</span>
+            </div>
+            <div class="panel-footer">
+              <span class="rose">Kinematic</span
+              ><span>Ground-truth objects</span>
+            </div>
+          </article>
+          <article class="viewer-panel">
+            <div class="panel-heading">
+              <span class="eyebrow green">02 / After residual RL</span
+              ><span id="rollout-status">Recorded policy rollout</span>
+            </div>
+            <div id="rollout-scene" class="compare-scene scene">
+              <span class="loading">Preparing live geometry…</span>
+            </div>
+            <div class="panel-footer">
+              <span class="green">Dynamic</span
+              ><span>Performed object motion</span>
+            </div>
+          </article>
+        </div>
+        <div class="explorer-transport">
+          <button
+            id="motion-play"
+            class="icon-button"
+            aria-label="Play comparison"
+          >
+            ▷</button
+          ><label class="sr-only" for="motion-timeline">Trajectory time</label
+          ><input
+            id="motion-timeline"
+            type="range"
+            min="0"
+            max="1000"
+            value="120"
+            step="1"
+          /><output id="motion-time" class="timecode">—</output
+          ><label class="sr-only" for="motion-speed">Playback speed</label
+          ><select id="motion-speed">
+            <option value="0.25">0.25×</option>
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+          </select>
+        </div>
+        <div class="explorer-options">
+          <label
+            ><input type="checkbox" id="trail-toggle" checked />
+            Trajectories</label
+          ><label
+            ><input type="checkbox" id="human-toggle" /> Human overlay</label
+          ><label
+            ><input type="checkbox" id="ghost-toggle" checked /> GT object
+            ghost</label
+          ><span class="sync-hint">Views & playback are synchronized</span>
+        </div>
+        <p id="scene-note" class="source-note" aria-live="polite">
+          Loading recorded trajectories…
+        </p>
+      </section>
+      <section
+        id="real-world"
+        class="section hardware-section"
+        aria-labelledby="real-title"
+      >
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">02 / On the real robot</span>
+              <h2 id="real-title">
+                From reference<br /><span class="rose">to reality.</span>
+              </h2>
+            </div>
+            <p>
+              A UR5 and Allegro hand replay selected successful simulation
+              rollouts. Seven tasks, including interactions held out from
+              retargeter training.
+            </p>
+          </div>
+          <div class="hardware-gallery">
+            <div class="hardware-main">
+              <div class="hardware-video-wrap">
+                <video
+                  id="hardware-video"
+                  controls
+                  playsinline
+                  muted
+                  preload="metadata"
+                  src="assets/media/real-cut.mp4?v=spoon3"
+                  poster="assets/media/real-cut.webp"
+                  aria-label="Real-robot cutting experiment"
+                ></video
+                ><span class="hardware-badge">REAL HARDWARE</span>
+              </div>
+              <div class="hardware-caption">
+                <div>
+                  <span class="eyebrow" id="hardware-kicker"
+                    >UR5 + ALLEGRO</span
+                  >
+                  <h3 id="hardware-title">Cut fruit</h3>
+                </div>
+                <p id="hardware-note">4 / 8 successful replays</p>
+              </div>
+            </div>
+            <div
+              id="hardware-list"
+              class="hardware-list"
+              aria-label="Choose hardware experiment"
+            ></div>
+          </div>
+          <p class="source-note">
+            Table V · Hardware success is conditional on selecting successful
+            simulation rollouts. Cut succeeds in 3% of simulation evaluations;
+            the shown replay is a selected success. The two held-out tasks are
+            reported separately.
+          </p>
+        </div>
+      </section>
+      <section
+        id="method"
+        class="section container"
+        aria-labelledby="method-title"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">03 / The method</span>
+            <h2 id="method-title">
+              <span class="rose">Learn the relationship.</span><br /><span
+                class="green"
+                >Then learn the physics.</span
+              >
+            </h2>
+          </div>
+          <p>
+            The interaction graph carries the human’s intent across embodiments.
+            Learning makes it fast; object-aware refinement makes the reference
+            useful for control.
+          </p>
+        </div>
+        <div
+          class="method-flow"
+          role="group"
+          aria-label="Interaction graph optimization to supervised learning to object-aware fine-tuning to residual reinforcement learning"
+        >
+          <svg viewBox="0 0 1000 205" aria-hidden="true">
+            <defs>
+              <linearGradient id="method-gradient">
+                <stop stop-color="#d18e86" />
+                <stop offset="1" stop-color="#3d9072" />
+              </linearGradient>
+            </defs>
+            <path class="flow-track" d="M110 105H890" />
+            <path class="flow-pulse" d="M110 105H890" />
+            <g transform="translate(110 105)" class="diagram-graph">
+              <path
+                d="M-35-27 4-38 35-9 25 32-23 27Z M-35-27 25 32 M4-38-23 27 M35-9-23 27 M-35-27 35-9 M4-38 25 32"
+              />
+              <circle cx="-35" cy="-27" r="6" />
+              <circle cx="4" cy="-38" r="6" />
+              <circle cx="35" cy="-9" r="6" />
+              <circle cx="25" cy="32" r="6" />
+              <circle cx="-23" cy="27" r="6" />
+            </g>
+            <g transform="translate(370 105)" class="diagram-net">
+              <path
+                d="M-32-26 0-35 32-26 M-32-26 0 0 32-26 M-32 26 0 0 32 26 M-32 26 0 35 32 26 M0-35 32 26 M0 35 32-26"
+              />
+              <circle cx="-32" cy="-26" r="7" />
+              <circle cx="-32" cy="26" r="7" />
+              <circle cx="0" cy="-35" r="7" />
+              <circle cx="0" cy="0" r="7" />
+              <circle cx="0" cy="35" r="7" />
+              <circle cx="32" cy="-26" r="7" />
+              <circle cx="32" cy="26" r="7" />
+            </g>
+            <g transform="translate(630 105)" class="diagram-contact">
+              <rect x="-35" y="-23" width="70" height="52" rx="22" />
+              <path
+                d="M-38-42-18-48 0-30 18-48 38-42 M-18-48-18-24 M18-48 18-24"
+              />
+              <circle cx="-18" cy="-23" r="5" />
+              <circle cx="18" cy="-23" r="5" />
+            </g>
+            <g transform="translate(890 105)" class="diagram-rl">
+              <path d="M-36 5Q-22-40-7-6T20-5T39-1" />
+              <path d="M-36 25Q-22-20-7 14T20 15T39 19" />
+              <circle cx="0" cy="0" r="49" />
+            </g>
+          </svg>
+          <div class="method-stages">
+            <button data-method="0" class="active" aria-pressed="true">
+              <small>01</small><strong>Interaction graph</strong
+              ><span>Optimize the seed</span></button
+            ><button data-method="1" aria-pressed="false">
+              <small>02</small><strong>Supervised learning</strong
+              ><span>Amortize the solve</span></button
+            ><button data-method="2" aria-pressed="false">
+              <small>03</small><strong>Object-aware FT</strong
+              ><span>Refine the contact</span></button
+            ><button data-method="3" aria-pressed="false">
+              <small>04</small><strong>Residual RL</strong
+              ><span>Make it physical</span>
+            </button>
+          </div>
+        </div>
+        <div class="method-explanation">
+          <span id="method-equation">L Vrobot ≈ L Vhuman</span>
+          <p id="method-description">
+            Human keypoints and object anchors form a shared interaction graph.
+            Optimizing robot joints and wrist pose to match its Laplacian
+            coordinates preserves the local hand–object relationship.
+          </p>
+        </div>
+        <details class="paper-figure">
+          <summary>
+            See the complete architecture from the paper <span>↗</span>
+          </summary>
+          <img
+            src="assets/figures/method.webp"
+            loading="lazy"
+            alt="Figure 2 from the supplied DexOAK manuscript: interaction graph seed optimization, supervised learning, object-aware fine-tuning and downstream RL."
+          />
+          <p class="source-note">
+            Original Figure 2 from the supplied manuscript.
+          </p>
+        </details>
+      </section>
+      <section
+        id="results"
+        class="section results-section"
+        aria-labelledby="results-title"
+      >
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">04 / Measured improvements</span>
+              <h2 id="results-title">
+                Better references.<br /><span class="green"
+                  >Stronger outcomes.</span
+                >
+              </h2>
+            </div>
+            <p>
+              Explore the paper’s results by dataset and embodiment. Every bar
+              starts at zero; each comparison keeps the reported metric and
+              evaluation setting.
+            </p>
+          </div>
+          <div class="results-filters">
+            <div class="segmented">
+              <button data-dataset="arctic" class="active" aria-pressed="true">
+                ARCTIC</button
+              ><button data-dataset="oakink" aria-pressed="false">
+                OakInk-v2
+              </button>
+            </div>
+            <div class="segmented">
+              <button
+                data-result-hand="inspire"
+                class="active"
+                aria-pressed="true"
+              >
+                Inspire</button
+              ><button data-result-hand="allegro" aria-pressed="false">
+                Allegro
+              </button>
+            </div>
+          </div>
+          <div id="main-charts" class="main-charts"></div>
+          <p id="results-note" class="source-note"></p>
+          <details class="more-results">
+            <summary>
+              What makes the reference matter?
+              <span>Reference quality & transfer ↗</span>
+            </summary>
+            <div class="main-charts">
+              <article class="chart-card">
+                <span class="eyebrow"
+                  >Table I · Same ManipTrans RL backend</span
+                >
+                <h3>Object-aware references</h3>
+                <p class="chart-subtitle">
+                  Strict success, SRMT (%) ↑ · OakInk-v2
+                </p>
+                <div id="ablation-bars" class="bars"></div>
+              </article>
+              <article class="chart-card">
+                <span class="eyebrow">Table III · DexMachina RL backend</span>
+                <h3>Transfer to ARCTIC</h3>
+                <p class="chart-subtitle">ADD-AUC (%) ↑ · Allegro</p>
+                <div id="transfer-bars" class="bars"></div>
+                <p class="chart-note">
+                  Zero-shot and fine-tuned references transfer from OakInk-v2.
+                  These results use the Table III backend, distinct from the
+                  end-to-end Table IV comparison above.
+                </p>
+              </article>
+            </div>
+          </details>
+          <details class="more-results">
+            <summary>
+              Repeatability on hardware <span>Five tasks · Table V ↗</span>
+            </summary>
+            <div class="hardware-results">
+              <div>
+                <h3>46 / 56</h3>
+                <p>
+                  Successful DexOAK replays across the five Table V tasks, after
+                  selecting successful simulation rollouts.
+                </p>
+                <div class="chart-legend">
+                  <span><i class="green-square"></i>DexOAK</span
+                  ><span><i class="gray-square"></i>ManipTrans</span>
+                </div>
+              </div>
+              <div id="hardware-bars"></div>
+            </div>
+          </details>
+        </div>
+      </section>
+      <section
+        id="cite"
+        class="section container citation-section"
+        aria-labelledby="citation-title"
+      >
+        <div>
+          <span class="eyebrow">05 / Citation</span>
+          <h2 id="citation-title">Build on DexOAK.</h2>
+          <p id="citation-status" class="source-note">
+            Preprint metadata · arXiv identifier forthcoming.
+          </p>
+        </div>
+        <div class="citation-card">
+          <button id="copy-citation" class="text-button">Copy BibTeX</button>
+          <pre id="citation"></pre>
+        </div>
+      </section>
+    </main>
+    <footer class="container">
+      <a class="wordmark small" href="#top">DexOAK</a
+      ><span>Federica Spinola · Robert Katzschmann · Cordelia Schmid</span
+      ><a href="credits.html">Design & asset credits ↗</a>
+    </footer>
+    <noscript
+      ><p class="container">
+        Enable JavaScript for interactive 3D scenes and result filters. The
+        paper and real-robot cutting video remain available above.
+      </p></noscript
+    >
+  </body>
+</html>

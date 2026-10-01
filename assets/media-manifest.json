@@ -1,0 +1,51 @@
+{
+  "real-unplug": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media1.mp4",
+    "file": "assets/media/real-unplug.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-cut": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media27.mp4",
+    "file": "assets/media/real-cut.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-pour": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media28.mp4",
+    "file": "assets/media/real-pour.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-take-out": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media29.mp4",
+    "file": "assets/media/real-take-out.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-close-gate": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media30.mp4",
+    "file": "assets/media/real-close-gate.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-button": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media31.mp4",
+    "file": "assets/media/real-button.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  },
+  "real-laptop": {
+    "source": "dexoak_video_slides.pptx::ppt/media/media32.m4v",
+    "file": "assets/media/real-laptop.mp4",
+    "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
+    "sourceWidth": 3840,
+    "sourceHeight": 2160
+  }
+}
