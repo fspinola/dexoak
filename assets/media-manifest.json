@@ -39,13 +39,22 @@
     "file": "assets/media/real-button.mp4",
     "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
     "sourceWidth": 3840,
-    "sourceHeight": 2160
+    "sourceHeight": 2160,
+    "startSeconds": 12.5
   },
   "real-laptop": {
     "source": "dexoak_video_slides.pptx::ppt/media/media32.m4v",
     "file": "assets/media/real-laptop.mp4",
     "encoding": "H.264 CRF18, original frame rate, maximum width 1920, no audio",
     "sourceWidth": 3840,
-    "sourceHeight": 2160
+    "sourceHeight": 2160,
+    "startSeconds": 8
+  },
+  "video": {
+    "source": "DexOAK_ICRA2027.mp4",
+    "file": "assets/media/dexoak-video.mp4",
+    "startSeconds": 0,
+    "endSeconds": 178,
+    "edit": "Removed closing submission card and its crossfade; original audio retained."
   }
 }

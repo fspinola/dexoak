@@ -8,7 +8,7 @@ export function loadScene(id = "cut") {
       (async () => {
         let data;
         if ("DecompressionStream" in window) {
-          const r = await fetch(`assets/scenes/${id}.json.gz?v=spoon3`);
+          const r = await fetch(`assets/scenes/${id}.json.gz?v=release-oct15`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           // Static hosts differ: some return gzip bytes, others decode them
           // through Content-Encoding before exposing the fetch response.
@@ -22,7 +22,7 @@ export function loadScene(id = "cut") {
               ).json()
             : JSON.parse(new TextDecoder().decode(bytes));
         } else {
-          const r = await fetch(`assets/scenes/${id}.json?v=spoon3`);
+          const r = await fetch(`assets/scenes/${id}.json?v=release-oct15`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           data = await r.json();
         }
@@ -99,6 +99,8 @@ export class MotionViewer {
     this.progress = 0;
     this.visible = true;
     this.showTrails = true;
+    this.showHumanTrail = true;
+    this.showRobotTrail = true;
     this.showHuman = false;
     this.showGhost = true;
     this.graphGrowth = 1;
@@ -355,13 +357,19 @@ export class MotionViewer {
         rose,
       ),
     );
-    this.pathSets.hand = Object.values(d.human).map((h) =>
-      make(
-        h.keypoints.map((k) => k[0]),
-        rose,
-        true,
-      ),
-    );
+    const humanWrist = Object.keys(d.human).length
+      ? Object.values(d.human).map((h) => h.keypoints.map((k) => k[0]))
+      : Object.values(d.humanWrist || {});
+    this.pathSets.hand = humanWrist.map((points) => make(points, rose, true));
+    for (const [key, track] of Object.entries(d.tracks)) {
+      this.pathSets[`robot-${key}`] = Object.keys(track[0].nodes).map((side) =>
+        make(
+          track.map((frame) => frame.nodes[side][0]),
+          green,
+          true,
+        ),
+      );
+    }
     for (const key of Object.keys(d.tracks).filter((k) => k.endsWith("-rl")))
       this.pathSets[key] = d.objects.flatMap((o, j) =>
         o.rlRecorded === false
@@ -508,13 +516,17 @@ export class MotionViewer {
       }
     }
     this.paths.visible =
-      this.showTrails && !["graph", "solve"].includes(this.stage);
+      (this.showTrails || this.showHumanTrail || this.showRobotTrail) &&
+      !["graph", "solve"].includes(this.stage);
     for (const [k, ls] of Object.entries(this.pathSets))
       for (const l of ls) {
         l.visible =
-          k === "gt" ||
-          k === "hand" ||
-          (this.stage === "rl" && k === `${this.hand}-rl`);
+          (k === "gt" && this.showTrails) ||
+          (k === "hand" && this.showHumanTrail) ||
+          (this.stage === "rl" && k === `${this.hand}-rl` && this.showTrails) ||
+          (k ===
+            `robot-${this.hand}-${this.stage === "seed" ? "graph" : this.stage}` &&
+            this.showRobotTrail);
         l.geometry.setDrawRange(0, Math.max(2, i + 1) * l.userData.factor);
       }
     this.currentFrame = i;

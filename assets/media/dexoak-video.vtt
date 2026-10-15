@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00.320 --> 00:02.879
+We present DexOAK that retargets
+
+00:02.879 --> 00:04.920
+human motion capture into object
+
+00:04.920 --> 00:07.359
+aware kinematic references, enabling
+
+00:07.359 --> 00:09.760
+replay on real hardware, like this
+
+00:09.760 --> 00:11.400
+sequence of an Allegro hand
+
+00:11.400 --> 00:13.400
+reproducing a human demonstration
+
+00:13.400 --> 00:14.760
+to remove a plug.
+
+00:16.972 --> 00:19.572
+Standard kinematic retargeting copies the
+
+00:19.572 --> 00:20.692
+human hand pose,
+
+00:21.012 --> 00:23.372
+but human robot embodiment differences
+
+00:23.372 --> 00:25.812
+can produce the wrong grasp missing the
+
+00:25.812 --> 00:26.412
+object.
+
+00:26.892 --> 00:29.452
+Thus, we suggest to retarget the hand
+
+00:29.452 --> 00:31.572
+object interaction directly at the
+
+00:31.572 --> 00:33.092
+kinematic retargeting stage.
+
+00:34.196 --> 00:37.196
+Hence, we propose DexOAK. It
+
+00:37.196 --> 00:39.235
+takes human hand key points and
+
+00:39.235 --> 00:41.396
+an object point cloud as input,
+
+00:41.396 --> 00:43.796
+retargets the interaction geometry,
+
+00:43.796 --> 00:45.475
+then learns and refines this
+
+00:45.475 --> 00:47.796
+mapping with contact losses. The
+
+00:47.796 --> 00:49.675
+resulting kinematic trajectory is
+
+00:49.675 --> 00:51.436
+made dynamically feasible with
+
+00:51.436 --> 00:52.956
+residual RL.
+
+00:53.526 --> 00:56.046
+DexOAK handles single-hand and
+
+00:56.046 --> 00:58.886
+bimanual tasks, rigid and articulated
+
+00:58.886 --> 01:01.366
+objects and different embodiments
+
+01:01.366 --> 01:03.006
+from the 16 degree of freedom
+
+01:03.006 --> 01:04.805
+Allegro to the 6 degree of
+
+01:04.805 --> 01:06.686
+freedom Inspire hands.
+
+01:06.967 --> 01:10.047
+Our learned retargeter also generalizes
+
+01:10.047 --> 01:10.927
+zero shot.
+
+01:11.287 --> 01:14.487
+Trained only on OakInk-v2, it performs
+
+01:14.487 --> 01:17.327
+close to the full ARCTIC-trained pipeline
+
+01:17.487 --> 01:20.047
+while running nearly 80 times faster.
+
+01:20.568 --> 01:22.808
+ManipTrans retargets the hand
+
+01:22.808 --> 01:24.768
+alone, so the reference misses the
+
+01:24.768 --> 01:27.408
+cap and RL fails early.
+
+01:27.408 --> 01:29.088
+DexOAK places the fingers
+
+01:29.088 --> 01:31.248
+correctly from the start, enabling
+
+01:31.248 --> 01:33.128
+RL to complete the motion.
+
+01:33.129 --> 01:35.809
+We see the same trend on ARCTIC with the
+
+01:35.809 --> 01:36.809
+Allegro hand.
+
+01:37.169 --> 01:40.169
+DexMachina uses hand-only retargeting and
+
+01:40.169 --> 01:42.329
+achieves less natural finger placement
+
+01:42.329 --> 01:44.169
+along with poorer object motion.
+
+01:44.689 --> 01:47.409
+DexOAK is object aware from the start.
+
+01:47.610 --> 01:49.930
+We replay successful simulation
+
+01:49.930 --> 01:52.570
+roll-outs open loop on a UR5 plus
+
+01:52.570 --> 01:54.690
+right Allegro hand with the object
+
+01:54.690 --> 01:56.090
+manually initialized at the
+
+01:56.090 --> 01:58.209
+demonstration start pose. This
+
+01:58.209 --> 02:00.289
+tests feasibility, not policy
+
+02:00.289 --> 02:01.690
+generalization.
+
+02:01.690 --> 02:04.050
+Across cutting, pouring, placing
+
+02:04.050 --> 02:05.969
+and closing tasks, the robot
+
+02:05.969 --> 02:07.889
+reproduces the demonstrated contacts
+
+02:07.889 --> 02:10.450
+in 46 of 56 trials.
+
+02:10.489 --> 02:12.729
+We also test two interactions
+
+02:12.729 --> 02:15.089
+unseen during retargeter training,
+
+02:15.089 --> 02:16.848
+closing a laptop and pressing a
+
+02:16.848 --> 02:19.849
+button. DexOAK retargets both zero
+
+02:19.849 --> 02:21.929
+shot before the usual RL
+
+02:21.929 --> 02:24.048
+refinement and robot replay,
+
+02:24.048 --> 02:25.288
+showing that the kinematic
+
+02:25.288 --> 02:27.409
+retargeter generalizes beyond its
+
+02:27.409 --> 02:29.489
+training interactions, successfully
+
+02:29.489 --> 02:32.089
+replaying 20 out of 24 trials on
+
+02:32.089 --> 02:33.089
+real hardware.
+
+02:35.512 --> 02:37.792
+Some failures remain. In
+
+02:37.792 --> 02:40.071
+simulation, fast motions such as
+
+02:40.071 --> 02:42.312
+shaking expose the gap between
+
+02:42.312 --> 02:44.512
+kinematics and dynamics. The
+
+02:44.512 --> 02:46.472
+reference captures the motion, but
+
+02:46.472 --> 02:48.432
+not the required force.
+
+02:48.432 --> 02:50.232
+Similar issues appear on the real
+
+02:50.232 --> 02:52.672
+robot during cutting or unplugging
+
+02:52.672 --> 02:54.352
+where abrupt motions can cause
+
+02:54.352 --> 02:56.471
+slip, amplified by open loop
+
+02:56.471 --> 02:58.000
+sensitivity to initialization.

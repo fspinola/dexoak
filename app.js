@@ -1,5 +1,10 @@
-import { publication } from "./site.config.js";
-import { benchmark, ablation, transfer, hardware } from "./results.js";
+import { publication, scenes } from "./site.config.js?v=release-oct15";
+import {
+  benchmark,
+  ablation,
+  transfer,
+  hardware,
+} from "./results.js?v=release-oct15";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -18,10 +23,7 @@ $("#authors").innerHTML =
     )
     .join('<span class="author-separator">·</span>') +
   `<div class="affiliations">${aff.map((a, i) => `<span><sup>${i + 1}</sup> ${a}</span>`).join("")}</div>`;
-for (const [id, url] of [
-  ["github-link", publication.github],
-  ["huggingface-link", publication.huggingface],
-])
+for (const [id, url] of [["github-link", publication.github]])
   if (url) {
     const a = $("#" + id);
     a.href = url;
@@ -71,7 +73,7 @@ $$("[data-clip]").forEach(
       const [id, title, note] = realClips.find((c) => c[0] === b.dataset.clip),
         v = $("#hardware-video");
       v.pause();
-      v.src = `assets/media/real-${id}.mp4?v=spoon3`;
+      v.src = `assets/media/real-${id}.mp4?v=release-oct15`;
       v.poster = `assets/media/real-${id}.webp`;
       v.setAttribute(
         "aria-label",
@@ -105,39 +107,51 @@ function bars(rows, max = 100) {
     `<div class="axis"><span>0</span><span>${max / 4}</span><span>${max / 2}</span><span>${max * 0.75}</span><span>${max}</span></div>`
   );
 }
-let dataset = "arctic",
-  resultHand = "inspire";
-function renderResults() {
-  $("#main-charts").innerHTML = benchmark[dataset][resultHand]
+const metricNames = ["SR_MT", "SR_obj", "ADD-AUC"];
+const chartColors = {
+  "DexOAK + RL": "#3d9072",
+  ManipTrans: "#a15d55",
+  SPIDER: "#d18e86",
+  DexMachina: "#beaea9",
+};
+function groupedChart(c, index) {
+  const width = 540,
+    base = 232,
+    scale = 1.7,
+    centers = [108, 278, 448],
+    bw = 30,
+    gap = 7;
+  let marks = "";
+  for (const value of [0, 25, 50, 75, 100]) {
+    const y = base - value * scale;
+    marks += `<line x1="42" y1="${y}" x2="524" y2="${y}" class="chart-gridline"/><text x="31" y="${y + 4}" text-anchor="end" class="chart-tick">${value}</text>`;
+  }
+  centers.forEach((center, metric) =>
+    c.methods.forEach((method, i) => {
+      const x =
+          center - (c.methods.length * (bw + gap) - gap) / 2 + i * (bw + gap),
+        value = method.values[metric];
+      if (value === null) {
+        marks += `<text x="${x + bw / 2}" y="${base - 7}" text-anchor="middle" class="chart-missing"><title>${method.name}: ${metricNames[metric]} not reported</title>—</text>`;
+        return;
+      }
+      marks += `<g class="metric-bar" tabindex="0" aria-label="${method.name}, ${metricNames[metric]}: ${value}%"><title>${method.name} · ${metricNames[metric]}: ${value}%</title><rect x="${x}" y="${base - value * scale}" width="${bw}" height="${value * scale}" rx="3" fill="${chartColors[method.name.replace("*", "")]}"/><text x="${x + bw / 2}" y="${base - value * scale - 8}" text-anchor="middle" class="chart-value">${value.toFixed(1)}</text></g>`;
+    }),
+  );
+  const labels = [
+    `SR<tspan baseline-shift="sub" font-size="10">MT</tspan>`,
+    `SR<tspan baseline-shift="sub" font-size="10">obj</tspan>`,
+    `ADD-AUC`,
+  ];
+  marks += labels
     .map(
-      (c) =>
-        `<article class="chart-card"><div class="chart-card-heading"><span class="eyebrow">${dataset === "arctic" ? "ARCTIC" : "OAKINK-V2"} · ${resultHand.toUpperCase()}</span><span>TABLE IV</span></div><h3>${c.title}</h3><p class="chart-subtitle">${c.metric}</p><div class="bars">${bars(c.rows)}</div><div class="chart-gain">↗ ${c.gain}</div>${c.note ? `<p class="chart-note">${c.note}</p>` : ""}</article>`,
+      (label, i) =>
+        `<text x="${centers[i]}" y="264" text-anchor="middle" class="chart-metric">${label}</text>`,
     )
     .join("");
-  $("#results-note").textContent =
-    "Table IV · End-to-end pipelines use their own dynamic refinement; DexOAK uses residual RL. " +
-    (dataset === "oakink"
-      ? "* SPIDER evaluates more OakInk-v2 sequences, so that comparison is indicative. "
-      : "") +
-    "Unreported metrics are omitted.";
+  return `<article class="benchmark-card"><div class="benchmark-heading"><h3>${c.dataset}</h3><span>${c.hand}</span></div><svg viewBox="0 0 ${width} 282" role="img" aria-labelledby="benchmark-title-${index}"><title id="benchmark-title-${index}">${c.dataset}, ${c.hand}: SR MT, SR obj and ADD-AUC. Percent, higher is better.</title><text x="42" y="24" class="chart-tick">Score (%) ↑</text>${marks}</svg><p class="chart-gain">${c.gain}</p></article>`;
 }
-$$("[data-dataset]").forEach(
-  (b) =>
-    (b.onclick = () => {
-      dataset = b.dataset.dataset;
-      select($$("[data-dataset]"), b);
-      renderResults();
-    }),
-);
-$$("[data-result-hand]").forEach(
-  (b) =>
-    (b.onclick = () => {
-      resultHand = b.dataset.resultHand;
-      select($$("[data-result-hand]"), b);
-      renderResults();
-    }),
-);
-renderResults();
+$("#main-charts").innerHTML = benchmark.map(groupedChart).join("");
 $("#ablation-bars").innerHTML = bars(ablation, 60);
 $("#transfer-bars").innerHTML = bars(transfer);
 $("#hardware-bars").innerHTML =
@@ -148,34 +162,6 @@ $("#hardware-bars").innerHTML =
     )
     .join("") +
   '<p class="hardware-note">— no successful simulation rollout to replay. Held-out Close Laptop and Press Button: 10/12 each, separate from the 46/56 total.</p>';
-const method = [
-  [
-    "L Vrobot ≈ L Vhuman",
-    "Human keypoints and object anchors form a shared interaction graph. Optimizing robot joints and wrist pose to match its Laplacian coordinates preserves the local hand–object relationship.",
-  ],
-  [
-    "Many solves → one forward pass",
-    "A feed-forward retargeter learns the optimized trajectories. Human keypoints, object features and the previous robot state predict the next wrist pose and joint configuration.",
-  ],
-  [
-    "Contact · Geometry · Temporal coherence",
-    "Fine-tuning uses surface contact, object-part conditioning and temporal coherence to improve the learned kinematic references before physics enters the picture.",
-  ],
-  [
-    "Reference + residual → robot action",
-    "A residual reinforcement-learning policy follows the object-aware reference while learning the corrections needed for contact dynamics and task execution.",
-  ],
-];
-$$("[data-method]").forEach(
-  (b) =>
-    (b.onclick = () => {
-      select($$("[data-method]"), b);
-      const i = Number(b.dataset.method);
-      $("#method-equation").textContent = method[i][0];
-      $("#method-description").textContent = method[i][1];
-      $(".method-flow").dataset.step = i;
-    }),
-);
 const rail = $$(".page-rail a");
 function updateRail() {
   let current = rail[0];
@@ -186,12 +172,32 @@ function updateRail() {
     )
       current = a;
   }
+  if (scrollY + innerHeight >= document.documentElement.scrollHeight - 5)
+    current = rail[rail.length - 1];
   rail.forEach((a) => {
     a.classList.toggle("active", a === current);
     if (a === current) a.setAttribute("aria-current", "location");
     else a.removeAttribute("aria-current");
   });
 }
+rail.forEach((a) =>
+  a.addEventListener("click", (e) => {
+    const target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
+    e.preventDefault();
+    history.pushState(null, "", a.getAttribute("href"));
+    target.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  }),
+);
+new IntersectionObserver(
+  (entries) => {
+    if (!entries[0].isIntersecting) $("#paper-video").pause();
+  },
+  { threshold: 0.05 },
+).observe($("#paper-video"));
 addEventListener("scroll", updateRail, { passive: true });
 updateRail();
 
@@ -386,13 +392,11 @@ async function setTeaser(id) {
     teaserTask = id;
     filmTime = 0;
     hero.showTrails = false;
+    hero.showHumanTrail = false;
+    hero.showRobotTrail = false;
     buildChapters();
     updateFilm();
     select($$("[data-teaser-task]"), $(`[data-teaser-task="${id}"]`));
-    $("#teaser-provenance").textContent =
-      id === "cut"
-        ? "Actual recorded stages · graph visualization & single-frame re-solve"
-        : "Verified DexOAK Inspire rollout · actual meshes & recorded motion";
     window.dexoak.hero = hero;
     window.dexoak.heroData = d;
   } catch (e) {
@@ -425,6 +429,9 @@ function updateMotion() {
   for (const v of [left, right])
     if (v) {
       v.showTrails = $("#trail-toggle").checked;
+      v.showHumanTrail =
+        $("#human-trail-toggle").checked && !$("#human-trail-toggle").disabled;
+      v.showRobotTrail = $("#robot-trail-toggle").checked;
       v.showHuman = $("#human-toggle").checked;
       v.showGhost = $("#ghost-toggle").checked;
       v.setProgress(p);
@@ -433,7 +440,13 @@ function updateMotion() {
   $("#motion-time").textContent =
     `${motionT.toFixed(1)} / ${compareData.duration.toFixed(1)} s`;
 }
-for (const id of ["trail-toggle", "human-toggle", "ghost-toggle"])
+for (const id of [
+  "trail-toggle",
+  "human-trail-toggle",
+  "robot-trail-toggle",
+  "human-toggle",
+  "ghost-toggle",
+])
   $("#" + id).onchange = updateMotion;
 $("#reset-view").onclick = () => {
   left?.reset();
@@ -460,30 +473,24 @@ function refreshComparison() {
     compareHand,
     referenceStage === "graph" ? "seed" : referenceStage,
   );
-  if (d.tracks[`${compareHand}-rl`]) {
-    right = new Scene($("#rollout-scene"), d);
-    right.setMode(compareHand, "rl");
-    $("#rollout-status").textContent = "Recorded policy rollout";
-  } else {
-    $("#rollout-status").textContent = "No verified rollout";
-    $("#rollout-scene").innerHTML =
-      '<div class="empty-scene"><span class="eyebrow">Rollout unavailable</span><p>No verified DexOAK RL recording for this hand–task pairing.</p><button class="text-button" id="open-uncap">Explore Inspire uncapping ↗</button></div>';
-    $("#open-uncap").onclick = () => {
-      $("#scene-select").value = "uncap";
-      loadComparison("uncap");
-    };
-  }
-  $$("[data-hand]").forEach((b) => {
-    b.disabled = !d.meshes[b.dataset.hand];
-  });
+  if (!d.tracks[`${compareHand}-rl`])
+    throw new Error("Missing verified RL pair in scene catalog");
+  right = new Scene($("#rollout-scene"), d);
+  right.setMode(compareHand, "rl");
+  $("#rollout-status").textContent = "Recorded policy rollout";
+  const hasHumanPath =
+    Object.keys(d.human).length > 0 ||
+    Object.keys(d.humanWrist || {}).length > 0;
+  $("#human-trail-toggle").disabled = !hasHumanPath;
+  $("#human-trail-note").hidden = hasHumanPath;
   select($$("[data-hand]"), $(`[data-hand="${compareHand}"]`));
   $("#human-toggle").disabled = !Object.keys(d.human).length;
   if ($("#human-toggle").disabled) $("#human-toggle").checked = false;
   $("#scene-note").textContent =
-    `${d.source} · ${d.reference.length} sampled frames, interpolated for display. ${d.dataset === "ARCTIC" ? "Articulated objects and recorded residual-policy states. No matched human mesh in these windows." : compareId === "uncap" ? "Original figure time mapping and object-relative alignment." : "Original fixed sim-to-demo alignment; no per-frame fitting."}`;
+    `${d.dataset} · ${d.title} · ${d.duration.toFixed(1)} s`;
   if (d.objects.some((o) => o.rlRecorded === false))
     $("#scene-note").textContent +=
-      " The additional scene object follows its ground-truth motion.";
+      " · The additional scene object follows its GT motion.";
   motionT = Math.min(motionT, d.duration);
   syncSource = null;
   updateMotion();
@@ -493,6 +500,8 @@ function refreshComparison() {
 }
 async function loadComparison(id) {
   if (!loadScene) return;
+  if (!scenes.some((s) => s.id === id && s.hands.includes(compareHand)))
+    id = availableScenes()[0].id;
   $("#scene-select").value = id;
   const token = ++compareToken;
   setMotionPlay(false);
@@ -517,18 +526,38 @@ async function loadComparison(id) {
     }
   }
 }
-$(".film-footnote a").addEventListener("click", () => {
-  compareHand = heroData?.defaultHand || compareHand;
-  loadComparison(teaserTask);
-});
-$("#scene-select").onchange = (e) => loadComparison(e.target.value);
+const lastScene = { allegro: "cut", inspire: "uncap" };
+function availableScenes(hand = compareHand) {
+  return scenes.filter((s) => s.hands.includes(hand));
+}
+function populateScenes() {
+  const choices = availableScenes();
+  $("#scene-select").innerHTML = choices
+    .map((s) => `<option value="${s.id}">${s.title} · ${s.dataset}</option>`)
+    .join("");
+  $("#pair-count").textContent = `${choices.length} kinematic + RL comparisons`;
+  if (choices.some((s) => s.id === compareId))
+    $("#scene-select").value = compareId;
+}
+$("#scene-select").onchange = (e) => {
+  lastScene[compareHand] = e.target.value;
+  loadComparison(e.target.value);
+};
 $$("[data-hand]").forEach(
   (b) =>
     (b.onclick = () => {
+      if (b.dataset.hand === compareHand) return;
+      lastScene[compareHand] = compareId;
       compareHand = b.dataset.hand;
-      refreshComparison();
+      const id = availableScenes().some((s) => s.id === compareId)
+        ? compareId
+        : lastScene[compareHand];
+      select($$("[data-hand]"), b);
+      populateScenes();
+      loadComparison(id);
     }),
 );
+populateScenes();
 $("#reference-stage").onchange = (e) => {
   referenceStage = e.target.value;
   left?.setMode(
@@ -564,7 +593,7 @@ window.dexoak = {
     };
   },
 };
-import("./viewer.js?v=spoon3")
+import("./viewer.js?v=release-oct15")
   .then(async (module) => {
     Scene = module.MotionViewer;
     loadScene = module.loadScene;
