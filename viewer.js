@@ -8,7 +8,7 @@ export function loadScene(id = "cut") {
       (async () => {
         let data;
         if ("DecompressionStream" in window) {
-          const r = await fetch(`assets/scenes/${id}.json.gz?v=release-oct15`);
+          const r = await fetch(`assets/scenes/${id}.json.gz?v=failures-oct15`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           // Static hosts differ: some return gzip bytes, others decode them
           // through Content-Encoding before exposing the fetch response.
@@ -22,7 +22,7 @@ export function loadScene(id = "cut") {
               ).json()
             : JSON.parse(new TextDecoder().decode(bytes));
         } else {
-          const r = await fetch(`assets/scenes/${id}.json?v=release-oct15`);
+          const r = await fetch(`assets/scenes/${id}.json?v=failures-oct15`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           data = await r.json();
         }
@@ -547,6 +547,23 @@ export class MotionViewer {
       if (!pts.length)
         pts = d.tracks[`${this.hand}-ft`][i].links.map((p) => p.slice(0, 3));
       pts.push(...d.reference[i].map((p) => p.slice(0, 3)));
+      // Both failure panels use the same bounds, including escaped objects.
+      // This changes the camera only; recorded trajectories stay untouched.
+      if (d.outcome === "failure") {
+        const actual = d.tracks[`${this.hand}-rl`][i];
+        pts.push(...actual.links.map((p) => p.slice(0, 3)));
+        actual.objects.forEach((p, j) => {
+          const q = new THREE.Quaternion(...p.slice(3));
+          const vertices = d.objects[j].positions;
+          const step = Math.max(3, Math.floor(vertices.length / 90) * 3);
+          for (let k = 0; k < vertices.length; k += step) {
+            const v = new THREE.Vector3(
+              ...vertices.slice(k, k + 3),
+            ).applyQuaternion(q);
+            pts.push([v.x + p[0], v.y + p[1], v.z + p[2]]);
+          }
+        });
+      }
       const lo = [0, 1, 2].map((k) => Math.min(...pts.map((p) => p[k]))),
         hi = [0, 1, 2].map((k) => Math.max(...pts.map((p) => p[k])));
       this.followTarget = new THREE.Vector3(

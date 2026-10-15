@@ -1,10 +1,10 @@
-import { publication, scenes } from "./site.config.js?v=release-oct15";
+import { publication, scenes } from "./site.config.js?v=failures-oct15";
 import {
   benchmark,
   ablation,
   transfer,
   hardware,
-} from "./results.js?v=release-oct15";
+} from "./results.js?v=failures-oct15";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -73,7 +73,7 @@ $$("[data-clip]").forEach(
       const [id, title, note] = realClips.find((c) => c[0] === b.dataset.clip),
         v = $("#hardware-video");
       v.pause();
-      v.src = `assets/media/real-${id}.mp4?v=release-oct15`;
+      v.src = `assets/media/real-${id}.mp4?v=failures-oct15`;
       v.poster = `assets/media/real-${id}.webp`;
       v.setAttribute(
         "aria-label",
@@ -167,6 +167,11 @@ function updateRail() {
   let current = rail[0];
   for (const a of rail) {
     if (
+      a.hash === "#failures" &&
+      $('[data-case-set="failure"]').getAttribute("aria-pressed") !== "true"
+    )
+      continue;
+    if (
       $(a.getAttribute("href")).getBoundingClientRect().top <
       innerHeight * 0.42
     )
@@ -186,6 +191,7 @@ rail.forEach((a) =>
     if (!target) return;
     e.preventDefault();
     history.pushState(null, "", a.getAttribute("href"));
+    if (a.hash === "#failures") setCaseSet("failure");
     target.scrollIntoView({
       behavior: reduced ? "auto" : "smooth",
       block: "start",
@@ -210,6 +216,7 @@ let motionPlaying = false,
   motionT = 0,
   motionSpeed = 1,
   compareHand = "allegro",
+  compareSet = "examples",
   compareId = "cut",
   referenceStage = "ft",
   compareToken = 0,
@@ -477,7 +484,15 @@ function refreshComparison() {
     throw new Error("Missing verified RL pair in scene catalog");
   right = new Scene($("#rollout-scene"), d);
   right.setMode(compareHand, "rl");
-  $("#rollout-status").textContent = "Recorded policy rollout";
+  const failed = d.outcome === "failure";
+  $("#rollout-status").textContent = failed
+    ? "Recorded failed rollout"
+    : "Recorded policy rollout";
+  $("#rollout-status").classList.toggle("failure-badge", failed);
+  $("#failure-context").hidden = !failed;
+  $("#failure-title").textContent = d.failure?.summary || "";
+  $("#failure-description").textContent = d.failure?.description || "";
+  select($$("[data-failure-case]"), $(`[data-failure-case="${d.id}"]`));
   const hasHumanPath =
     Object.keys(d.human).length > 0 ||
     Object.keys(d.humanWrist || {}).length > 0;
@@ -500,8 +515,7 @@ function refreshComparison() {
 }
 async function loadComparison(id) {
   if (!loadScene) return;
-  if (!scenes.some((s) => s.id === id && s.hands.includes(compareHand)))
-    id = availableScenes()[0].id;
+  if (!availableScenes().some((s) => s.id === id)) id = availableScenes()[0].id;
   $("#scene-select").value = id;
   const token = ++compareToken;
   setMotionPlay(false);
@@ -513,7 +527,7 @@ async function loadComparison(id) {
     if (token !== compareToken) return;
     compareData = d;
     compareId = id;
-    motionT = d.duration * 0.12;
+    motionT = d.outcome === "failure" ? 0 : d.duration * 0.12;
     refreshComparison();
   } catch (e) {
     failure($("#reference-scene"), e);
@@ -526,37 +540,76 @@ async function loadComparison(id) {
     }
   }
 }
-const lastScene = { allegro: "cut", inspire: "uncap" };
+const lastScene = {
+  examples: { allegro: "cut", inspire: "uncap" },
+  failure: { allegro: "fail-shake", inspire: "fail-pour" },
+};
 function availableScenes(hand = compareHand) {
-  return scenes.filter((s) => s.hands.includes(hand));
+  return scenes.filter(
+    (s) => s.hands.includes(hand) && (s.group || "examples") === compareSet,
+  );
 }
 function populateScenes() {
   const choices = availableScenes();
   $("#scene-select").innerHTML = choices
     .map((s) => `<option value="${s.id}">${s.title} · ${s.dataset}</option>`)
     .join("");
-  $("#pair-count").textContent = `${choices.length} kinematic + RL comparisons`;
+  $("#pair-count").textContent =
+    compareSet === "failure"
+      ? `${choices.length} recorded failures · reference + RL`
+      : `${choices.length} kinematic + RL comparisons`;
+  $("#failure-case-list").hidden = compareSet !== "failure";
+  $("#failure-case-list").innerHTML =
+    compareSet === "failure"
+      ? choices
+          .map(
+            (s, i) =>
+              `<button data-failure-case="${s.id}" aria-pressed="${s.id === compareId}"><span class="case-number">0${i + 1}</span><strong>${s.title}</strong><span>${s.summary}</span></button>`,
+          )
+          .join("")
+      : "";
+  $$("[data-failure-case]").forEach(
+    (b) =>
+      (b.onclick = () => {
+        lastScene[compareSet][compareHand] = b.dataset.failureCase;
+        loadComparison(b.dataset.failureCase);
+      }),
+  );
   if (choices.some((s) => s.id === compareId))
     $("#scene-select").value = compareId;
 }
 $("#scene-select").onchange = (e) => {
-  lastScene[compareHand] = e.target.value;
+  lastScene[compareSet][compareHand] = e.target.value;
   loadComparison(e.target.value);
 };
 $$("[data-hand]").forEach(
   (b) =>
     (b.onclick = () => {
       if (b.dataset.hand === compareHand) return;
-      lastScene[compareHand] = compareId;
+      lastScene[compareSet][compareHand] = compareId;
       compareHand = b.dataset.hand;
       const id = availableScenes().some((s) => s.id === compareId)
         ? compareId
-        : lastScene[compareHand];
+        : lastScene[compareSet][compareHand];
       select($$("[data-hand]"), b);
       populateScenes();
       loadComparison(id);
     }),
 );
+function setCaseSet(value) {
+  if (value === compareSet) return;
+  lastScene[compareSet][compareHand] = compareId;
+  compareSet = value;
+  select($$("[data-case-set]"), $(`[data-case-set="${value}"]`));
+  populateScenes();
+  loadComparison(lastScene[compareSet][compareHand]);
+}
+$$("[data-case-set]").forEach(
+  (b) => (b.onclick = () => setCaseSet(b.dataset.caseSet)),
+);
+addEventListener("hashchange", () => {
+  if (location.hash === "#failures") setCaseSet("failure");
+});
 populateScenes();
 $("#reference-stage").onchange = (e) => {
   referenceStage = e.target.value;
@@ -568,6 +621,7 @@ $("#reference-stage").onchange = (e) => {
 };
 window.dexoak = {
   setTeaser,
+  setCaseSet,
   loadComparison,
   setFilmPlay,
   setMotionPlay,
@@ -587,18 +641,24 @@ window.dexoak = {
       filmPlaying,
       compareId,
       compareHand,
+      compareSet,
       motionT,
       motionPlaying,
       referenceStage,
     };
   },
 };
-import("./viewer.js?v=release-oct15")
+import("./viewer.js?v=failures-oct15")
   .then(async (module) => {
     Scene = module.MotionViewer;
     loadScene = module.loadScene;
     await setTeaser("cut");
-    await loadComparison("cut");
+    if (location.hash === "#failures") {
+      compareSet = "failure";
+      select($$("[data-case-set]"), $('[data-case-set="failure"]'));
+      populateScenes();
+    }
+    await loadComparison(lastScene[compareSet][compareHand]);
   })
   .catch((e) => {
     for (const id of ["hero-scene", "reference-scene", "rollout-scene"])

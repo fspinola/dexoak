@@ -11,11 +11,11 @@
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="assets/fonts/fonts.css" />
-    <link rel="stylesheet" href="style.css?v=release-oct15" />
+    <link rel="stylesheet" href="style.css?v=failures-oct15" />
     <script type="importmap">
       { "imports": { "three": "./assets/vendor/three.module.js" } }
     </script>
-    <script type="module" src="app.js?v=release-oct15"></script>
+    <script type="module" src="app.js?v=failures-oct15"></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -39,6 +39,7 @@
       ><a href="#teaser"><i></i><span>Teaser</span></a
       ><a href="#video"><i></i><span>Video</span></a
       ><a href="#explore"><i></i><span>Explore</span></a
+      ><a href="#failures"><i></i><span>Failures</span></a
       ><a href="#real-world"><i></i><span>Real world</span></a
       ><a href="#method"><i></i><span>Method</span></a
       ><a href="#results"><i></i><span>Results</span></a
@@ -53,7 +54,7 @@
           <div class="sequence-scroll">
             <img
               id="spoon-sequence"
-              src="assets/figures/spoon-sequence.webp?v=release-oct15"
+              src="assets/figures/spoon-sequence.webp?v=failures-oct15"
               width="2400"
               height="600"
               fetchpriority="high"
@@ -253,6 +254,18 @@
           </p>
         </div>
         <div
+          class="case-set-picker"
+          id="failures"
+          aria-label="Choose example type"
+        >
+          <button data-case-set="examples" aria-pressed="true" class="active">
+            Selected results
+          </button>
+          <button data-case-set="failure" aria-pressed="false">
+            Failure cases <span>2 per hand</span>
+          </button>
+        </div>
+        <div
           class="embodiment-picker"
           id="hand-tabs"
           aria-label="Choose embodiment"
@@ -273,6 +286,17 @@
           </div>
           <span id="pair-count" class="source-note"></span
           ><button id="reset-view" class="text-button">Reset view ↺</button>
+        </div>
+        <div
+          id="failure-case-list"
+          class="failure-case-list"
+          aria-label="Choose a recorded failure"
+          hidden
+        ></div>
+        <div id="failure-context" class="failure-context" hidden>
+          <span class="eyebrow rose">Recorded failure</span>
+          <h3 id="failure-title"></h3>
+          <p id="failure-description"></p>
         </div>
         <div class="comparison">
           <article class="viewer-panel">
@@ -400,7 +424,7 @@
                   playsinline
                   muted
                   preload="metadata"
-                  src="assets/media/real-cut.mp4?v=release-oct15"
+                  src="assets/media/real-cut.mp4?v=failures-oct15"
                   poster="assets/media/real-cut.webp"
                   aria-label="Real-robot cutting experiment"
                 ></video
