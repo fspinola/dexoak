@@ -569,7 +569,9 @@ export class MotionViewer {
     if (!w || !h) return;
     this.renderer.setSize(w, h, false);
     const r =
-        (this.viewRadius || this.data.radius) * (this.vignette ? 1.04 : 1.2),
+        (this.viewRadius || this.data.radius) *
+        (this.vignette ? 1.04 : 1.2) *
+        (this.data.viewPadding || 1),
       aspect = w / h;
     // Fit the full trajectory in both orientations without clipping on phones.
     const vertical = r / Math.min(aspect, 1.55);
