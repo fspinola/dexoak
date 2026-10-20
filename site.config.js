@@ -20,11 +20,13 @@ export const publication = {
   github: "https://github.com/fspinola/dexoak",
   video: "#video",
   bibtex: `@misc{spinola2026dexoak,
-  title = {DexOAK: Object-Aware Kinematic Retargeting},
-  author = {Spinola, Federica and Katzschmann, Robert
-            and Schmid, Cordelia},
-  year = {2026},
-  note = {Preprint; arXiv identifier forthcoming}
+      title={DexOAK: Object-Aware Kinematic Retargeting},
+      author={Federica Spinola and Robert Katzschmann and Cordelia Schmid},
+      year={2026},
+      eprint={2610.26762},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2610.26762},
 }`,
 };
 export const palette = {
