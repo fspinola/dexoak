@@ -6,11 +6,14 @@ authors:
   - family-names: Spinola
     given-names: Federica
     affiliation: Inria
+    website: "https://sites.google.com/view/fede-spi/"
   - family-names: Katzschmann
     given-names: Robert
     affiliation: ETH Zürich
+    website: "https://srl.ethz.ch/the-group/prof-robert-katzschmann.html"
   - family-names: Schmid
     given-names: Cordelia
     affiliation: Inria
+    website: "https://cordeliaschmid.github.io"
 url: "https://fspinola.github.io/dexoak/"
 repository-code: "https://github.com/fspinola/dexoak"
