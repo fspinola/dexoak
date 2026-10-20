@@ -1,10 +1,10 @@
-import { publication, scenes } from "./site.config.js?v=failures-oct15";
+import { publication, scenes } from "./site.config.js?v=arxiv-oct20";
 import {
   benchmark,
   ablation,
   transfer,
   hardware,
-} from "./results.js?v=failures-oct15";
+} from "./results.js?v=arxiv-oct20";
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -76,7 +76,7 @@ $$("[data-clip]").forEach(
       const [id, title, note] = realClips.find((c) => c[0] === b.dataset.clip),
         v = $("#hardware-video");
       v.pause();
-      v.src = `assets/media/real-${id}.mp4?v=failures-oct15`;
+      v.src = `assets/media/real-${id}.mp4?v=arxiv-oct20`;
       v.poster = `assets/media/real-${id}.webp`;
       v.setAttribute(
         "aria-label",
@@ -651,7 +651,7 @@ window.dexoak = {
     };
   },
 };
-import("./viewer.js?v=failures-oct15")
+import("./viewer.js?v=arxiv-oct20")
   .then(async (module) => {
     Scene = module.MotionViewer;
     loadScene = module.loadScene;

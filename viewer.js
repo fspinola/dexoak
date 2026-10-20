@@ -8,7 +8,7 @@ export function loadScene(id = "cut") {
       (async () => {
         let data;
         if ("DecompressionStream" in window) {
-          const r = await fetch(`assets/scenes/${id}.json.gz?v=failures-oct15`);
+          const r = await fetch(`assets/scenes/${id}.json.gz?v=arxiv-oct20`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           // Static hosts differ: some return gzip bytes, others decode them
           // through Content-Encoding before exposing the fetch response.
@@ -22,7 +22,7 @@ export function loadScene(id = "cut") {
               ).json()
             : JSON.parse(new TextDecoder().decode(bytes));
         } else {
-          const r = await fetch(`assets/scenes/${id}.json?v=failures-oct15`);
+          const r = await fetch(`assets/scenes/${id}.json?v=arxiv-oct20`);
           if (!r.ok) throw new Error(`Scene ${id}: HTTP ${r.status}`);
           data = await r.json();
         }
