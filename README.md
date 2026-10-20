@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/dexoak-logo.svg" width="360" alt="DexOAK"></p>
 <h2 align="center">Object-Aware Kinematic Retargeting</h2>
 <p align="center">Federica Spinola · Robert Katzschmann · Cordelia Schmid<br>Inria · ETH Zürich · Inria</p>
-<p align="center"><a href="https://fspinola.github.io/dexoak/">Project website</a> · <a href="https://fspinola.github.io/dexoak/assets/paper.pdf">Paper</a> · <a href="https://fspinola.github.io/dexoak/#video">Video</a>
+<p align="center"><a href="https://fspinola.github.io/dexoak/">Project website</a> · <a href="https://arxiv.org/pdf/2610.26762">Paper</a> · <a href="https://fspinola.github.io/dexoak/#video">Video</a>
 <p align="center"><img src="https://img.shields.io/badge/code-coming_soon-3D9072?style=flat-square" alt="Code coming soon"></p>
 <p align="center"><img src="assets/spoon-sequence.webp" width="800" alt="Human spoon transport retargeted to Allegro"></p>
 
@@ -21,10 +21,12 @@ Research code and checkpoints are not released yet. This branch contains the pro
 
 ```bibtex
 @misc{spinola2026dexoak,
-  title = {DexOAK: Object-Aware Kinematic Retargeting},
-  author = {Spinola, Federica and Katzschmann, Robert
-            and Schmid, Cordelia},
-  year = {2026},
-  note = {Preprint; arXiv identifier forthcoming}
+      title={DexOAK: Object-Aware Kinematic Retargeting}, 
+      author={Federica Spinola and Robert Katzschmann and Cordelia Schmid},
+      year={2026},
+      eprint={2610.26762},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2610.26762}, 
 }
 ```
