@@ -39,8 +39,6 @@ for (const [id, url] of [["github-link", publication.github]])
     a.removeAttribute("title");
     a.querySelector("small")?.remove();
   }
-if (publication.arxiv)
-  $$('a[href="assets/paper.pdf"]').forEach((a) => (a.href = publication.arxiv));
 $("#citation").textContent = publication.bibtex;
 $("#copy-citation").onclick = async () => {
   try {

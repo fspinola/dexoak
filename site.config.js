@@ -19,7 +19,6 @@ export const publication = {
   ],
   github: "https://github.com/fspinola/dexoak",
   video: "#video",
-  arxiv: null,
   bibtex: `@misc{spinola2026dexoak,
   title = {DexOAK: Object-Aware Kinematic Retargeting},
   author = {Spinola, Federica and Katzschmann, Robert
