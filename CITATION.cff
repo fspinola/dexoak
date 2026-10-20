@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "Please cite the DexOAK paper. The arXiv identifier is forthcoming."
+message: "Please cite the DexOAK paper."
 title: "DexOAK: Object-Aware Kinematic Retargeting"
 type: software
 authors:
@@ -17,3 +17,19 @@ authors:
     website: "https://cordeliaschmid.github.io"
 url: "https://fspinola.github.io/dexoak/"
 repository-code: "https://github.com/fspinola/dexoak"
+preferred-citation:
+  type: generic
+  title: "DexOAK: Object-Aware Kinematic Retargeting"
+  authors:
+    - family-names: Spinola
+      given-names: Federica
+    - family-names: Katzschmann
+      given-names: Robert
+    - family-names: Schmid
+      given-names: Cordelia
+  year: 2026
+  url: "https://arxiv.org/abs/2610.26762"
+  identifiers:
+    - type: other
+      value: "arXiv:2610.26762"
+      description: "arXiv preprint (cs.RO)"
