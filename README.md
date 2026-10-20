@@ -1,6 +1,6 @@
 <p align="center"><img src="assets/dexoak-logo.svg" width="360" alt="DexOAK"></p>
 <h2 align="center">Object-Aware Kinematic Retargeting</h2>
-<p align="center">Federica Spinola · Robert Katzschmann · Cordelia Schmid<br>Inria · ETH Zürich · Inria</p>
+<p align="center"><a href="https://sites.google.com/view/fede-spi/">Federica Spinola</a><sup>1</sup> · <a href="https://srl.ethz.ch/the-group/prof-robert-katzschmann.html">Robert Katzschmann</a><sup>2</sup> · <a href="https://cordeliaschmid.github.io">Cordelia Schmid</a><sup>1</sup><br><sup>1</sup>Inria · <sup>2</sup>ETH Zürich</p>
 <p align="center"><a href="https://fspinola.github.io/dexoak/">Project website</a> · <a href="https://arxiv.org/pdf/2610.26762">Paper</a> · <a href="https://fspinola.github.io/dexoak/#video">Video</a>
 <p align="center"><img src="https://img.shields.io/badge/code-coming_soon-3D9072?style=flat-square" alt="Code coming soon"></p>
 <p align="center"><img src="assets/spoon-sequence.webp" width="800" alt="Human spoon transport retargeted to Allegro"></p>
