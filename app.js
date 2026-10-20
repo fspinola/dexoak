@@ -15,14 +15,19 @@ const select = (items, active) =>
     b.setAttribute("aria-pressed", String(on));
   });
 const aff = [...new Set(publication.authors.map((a) => a.affiliation))];
+const authorLink = (a) =>
+  `<a href="${a.url}" target="_blank" rel="noopener">${a.name}</a>`;
 $("#authors").innerHTML =
   publication.authors
     .map(
       (a) =>
-        `<span>${a.name}<sup>${aff.indexOf(a.affiliation) + 1}</sup></span>`,
+        `<span>${authorLink(a)}<sup>${aff.indexOf(a.affiliation) + 1}</sup></span>`,
     )
     .join('<span class="author-separator">·</span>') +
   `<div class="affiliations">${aff.map((a, i) => `<span><sup>${i + 1}</sup> ${a}</span>`).join("")}</div>`;
+$("#footer-authors").innerHTML = publication.authors
+  .map(authorLink)
+  .join(" · ");
 for (const [id, url] of [["github-link", publication.github]])
   if (url) {
     const a = $("#" + id);

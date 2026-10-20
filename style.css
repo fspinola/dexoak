@@ -261,6 +261,10 @@ h1 .wordmark {
 .authors > span {
   white-space: nowrap;
 }
+.authors a:hover,
+#footer-authors a:hover {
+  color: var(--rose);
+}
 .authors sup {
   font-size: 9px;
   color: var(--rose);
@@ -1328,7 +1332,7 @@ footer {
 footer .wordmark {
   font-size: 19px;
 }
-footer a:last-child {
+footer > a:last-child {
   color: var(--green);
 }
 .error-note {

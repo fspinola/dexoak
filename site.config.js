@@ -1,10 +1,22 @@
 // Fill these when release metadata is confirmed. Never guess author order or public URLs.
 export const publication = {
   authors: [
-    { name: "Federica Spinola", affiliation: "Inria" },
-    { name: "Robert Katzschmann", affiliation: "ETH Zürich" },
-    { name: "Cordelia Schmid", affiliation: "Inria" },
-  ], // {name: 'Full name', affiliation: 'Institution', url: 'https://…'}
+    {
+      name: "Federica Spinola",
+      affiliation: "Inria",
+      url: "https://sites.google.com/view/fede-spi/",
+    },
+    {
+      name: "Robert Katzschmann",
+      affiliation: "ETH Zürich",
+      url: "https://srl.ethz.ch/the-group/prof-robert-katzschmann.html",
+    },
+    {
+      name: "Cordelia Schmid",
+      affiliation: "Inria",
+      url: "https://cordeliaschmid.github.io",
+    },
+  ],
   github: "https://github.com/fspinola/dexoak",
   video: "#video",
   arxiv: null,
