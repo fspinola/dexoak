@@ -309,11 +309,6 @@ h1 .wordmark {
   transform: translateY(-2px);
   border-color: #98b09d;
 }
-.button.primary {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: #fff;
-}
 .button svg {
   width: 15px;
   height: 15px;
